@@ -18,7 +18,11 @@ namespace Red_Green
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-
+        Texture2D redSquare;
+        Rectangle backgroundRectangle;
+        Texture2D greenSquare;
+        Rectangle greenRectangle;
+        int stateOfLight = 0;
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -34,7 +38,7 @@ namespace Red_Green
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-
+            backgroundRectangle = new Rectangle(0,0,800,480);
             base.Initialize();
         }
 
@@ -46,7 +50,8 @@ namespace Red_Green
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
+            redSquare = Content.Load<Texture2D>("red");
+            greenSquare = Content.Load<Texture2D>("green");
             // TODO: use this.Content to load your game content here
         }
 
@@ -69,9 +74,26 @@ namespace Red_Green
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
-
+            MouseState mouse = Mouse.GetState();
             // TODO: Add your update logic here
-
+            if (mouse.Y >= 0 && mouse.Y <= 480)
+            {
+                if (0 <= mouse.X && mouse.X <= 400)
+                {
+                    greenRectangle = new Rectangle(0,0, 400, 480);
+                }
+                else if (mouse.X > 400 && mouse.X <= 800)
+                {
+                    greenRectangle = new Rectangle(400,0,400,480);
+                }
+                else
+                {
+                    greenRectangle = new Rectangle(0,0,0,0);
+                }
+            }
+            else {
+                greenRectangle = new Rectangle(0, 0, 0, 0);
+            }
             base.Update(gameTime);
         }
 
@@ -84,7 +106,10 @@ namespace Red_Green
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
-
+            spriteBatch.Begin();
+            spriteBatch.Draw(redSquare,backgroundRectangle,Color.White);
+            spriteBatch.Draw(greenSquare,greenRectangle,Color.White);
+            spriteBatch.End();
             base.Draw(gameTime);
         }
     }
